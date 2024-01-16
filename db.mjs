@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const connectionString = process.env.DATABASE || "";
+const connectionString = process.env.Test1 || "";
 
 const client = new MongoClient(connectionString);
 
@@ -14,7 +14,7 @@ try {
 } catch(e) {
   console.error(e);
 }
-
-let db = conn.db("Clg_Qn_DB");
+const db2 = process.env.test2
+let db = conn.db(db2);
 
 export default db;
