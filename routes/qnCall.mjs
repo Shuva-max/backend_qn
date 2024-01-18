@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
     res.send("Hii... I am running fine").status(200);
     
   } catch (error) {
-    res.json({msg: "inActive", err: error}).status(500);
+    res.status(500).json({msg: "Internal Server Error!!!", err: error});
   }
 });
 
@@ -31,7 +31,7 @@ router.get("/questions", async (req, res) => {
     res.send(results).status(200);
     
   } catch (error) {
-    res.json({msg: "inActive", err: error}).status(500);
+    res.status(500).json({msg: "Internal Server Error!!!", err: error});
   }
 });
 
@@ -48,11 +48,11 @@ router.get("/latest", async (req, res) => {
     res.send(results).status(200);
     
   } catch (error) {
-    res.json({msg: "inActive", err: error}).status(500);
+    res.status(500).json({msg: "Internal Server Error!!!", err: error});
   }
 });
 
-// 
+// filter path taking dept and semester as query parameter
 router.get('/filter', async(req, res)=>{
   try {
     const dept = req.query.dept;
@@ -62,15 +62,72 @@ router.get('/filter', async(req, res)=>{
     
     const results = await collection.aggregate([
         {$match: {Dept_Name: {$regex: dept, $options: "i"}, Semester: sem}},
-        {$sort: {Year: -1}},
-        {$limit: 50}
+        {$sort: {Year: -1}}
     ]).toArray();
 
     console.log(results.length)
-    res.json(results).status(200)
+    if(results.length !== 0){
+      res.status(200).json(results)
+    }else {
+      res.status(204).send('No Result Found!!!');
+    }
     
   } catch (error) {
-    res.json({msg: "inActive", err: error}).status(500);
+    res.status(500).json({msg: "Internal Server Error!!!", err: error});
+  }
+})
+
+// filter2 path taking dept, semester, exam_type, year as query parameter
+router.get('/filter2', async(req, res)=>{
+  try {
+    const dept = req.query.dept;
+    const xm_type = req.query.exam_type;
+    const sem = parseInt(req.query.sem);
+    const year = parseInt(req.query.year);
+    
+    console.log(dept, sem, typeof(sem), year, typeof(year), xm_type)
+    
+    const results = await collection.aggregate([
+        {$match: {Dept_Name: {$regex: dept, $options: "i"}, Semester: sem, Exam_Type: {$regex: xm_type, $options: "i"}, Year: year}}
+    ]).toArray();
+
+    console.log(results.length)
+    if(results.length !== 0){
+      res.status(200).json(results)
+    }else {
+      res.status(204).send('No Result Found!!!');
+    }
+    
+  } catch (error) {
+    res.status(500).json({msg: "Internal Server Error!!!", err: error});
+  }
+})
+
+// filter2 path taking subject_name, dept, semester, exam_type, year as query parameter
+router.get('/filter3', async(req, res)=>{
+  try {
+    const dept = req.query.dept;
+    const xm_type = req.query.exam_type;
+    const subj= req.query.subj;
+    const subjC= req.query.subjCode;
+    const sem = parseInt(req.query.sem);
+    const year = parseInt(req.query.year);
+    
+    console.log(subj, subjC, dept, sem, typeof(sem), year, typeof(year), xm_type)
+    
+    const results = await collection.aggregate([
+        {$match: {Subject_Name: {$regex: subj, $options: "i"}, Subject_Code: {$regex: subjC, $options: "i"}, Dept_Name: {$regex: dept, $options: "i"}, Semester: sem, Exam_Type: {$regex: xm_type, $options: "i"}, Year: year}}
+    ]).toArray();
+
+    console.log(results.length)
+    if(results.length !== 0){
+      res.status(200).json(results)
+    }else {
+      res.status(204).send('No Result Found!!!');
+    }
+    
+  } catch (error) {
+    res.status(500).json({msg: "Internal Server Error!!!", err: error});
   }
 })
 
