@@ -83,34 +83,46 @@ router.get('/filter', async(req, res)=>{
 
 // filter2 path taking dept, semester, exam_type, year as query parameter
 router.get('/filter2', async(req, res)=>{
-  let flag = false;
+  let flag = "";
   try {
     const dept = req.query.dept;
     const sem = parseInt(req.query.sem);
     const year = parseInt(req.query.year);
     
-    console.log(dept, sem, typeof(sem), year, typeof(year))
+    console.log(dept,typeof(dept), sem, typeof(sem), year, typeof(year))
     
-    const results = await collection.aggregate([
-        {$match: {Dept_Name: {$regex: dept, $options: "i"}, Semester: sem, Year: year}}
+    // console.log(year>2010)
+    let results;
+    if(year>2010) {
+      results = await collection.aggregate([
+          {$match: {Dept_Name: {$regex: dept, $options: "i"}, Semester: sem, Year: year}}
+      ]).toArray();
+
+    }else {
+      results = await collection.aggregate([
+        {$match: {Dept_Name: {$regex: dept, $options: "i"}, Semester: sem}}
     ]).toArray();
+    
+    }
 
     console.log(results.length)
     if(results.length !== 0){
-      flag = true;
+      flag = 'OK';
       res.status(200).json({result: results, status: flag})
     }else {
-      res.status(204).send({result:'No Result Found!!!', status: flag});
+      flag = "EMPTY";
+      res.json({result:'No Result Found!!!', status: flag});
     }
     
   } catch (error) {
+    flag = "ERROR";
     res.status(500).json({msg: "Internal Server Error!!!", err: error, status: flag});
   }
 })
 
 // filter2 path taking subject_name, dept, semester, exam_type, year as query parameter
 router.get('/filter3', async(req, res)=>{
-  let flag = false;
+  let flag = "";
   try {
     const dept = req.query.dept;
     const xm_type = req.query.exam_type;
@@ -127,13 +139,15 @@ router.get('/filter3', async(req, res)=>{
 
     console.log(results.length)
     if(results.length !== 0){
-      flag = true;
+      flag = "OK";
       res.status(200).json({result: results, status: flag})
     }else {
-      res.status(204).send({msg:'No Result Found!!!', status: flag});
+      flag ="EMPTY"
+      res.send({msg:'No Result Found!!!', status: flag});
     }
     
   } catch (error) {
+    flag = "ERROR"
     res.status(500).json({msg: "Internal Server Error!!!", err: error, status: flag});
   }
 })
