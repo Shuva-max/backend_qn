@@ -56,7 +56,7 @@ router.get("/latest", async (req, res) => {
   }
 });
 
-// filter path taking dept and semester as query parameter
+// filter path taking dept and semester as query parameter we dont use as of 
 router.get('/filter', async(req, res)=>{
   try {
     const dept = req.query.dept;
