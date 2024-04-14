@@ -27,7 +27,7 @@ router.get("/questions", async (req, res) => {
       .limit(50)
       .toArray();
   
-    console.log(results.length);  
+    // console.log(results.length);  
     res.send(results).status(200);
     
   } catch (error) {
@@ -45,7 +45,7 @@ router.get("/latest", async (req, res) => {
       {"$limit": 50}
     ]).toArray();
   
-    console.log(results.length);  
+    // console.log(results.length);  
     if(results.length!==0){
       flag=true;
       res.send({result: results, status:flag}).status(200);
@@ -62,14 +62,14 @@ router.get('/filter', async(req, res)=>{
     const dept = req.query.dept;
     const sem = parseInt(req.query.sem);
     
-    console.log(dept, sem, typeof(sem))
+    // console.log(dept, sem, typeof(sem))
     
     const results = await collection.aggregate([
         {$match: {Dept_Name: {$regex: dept, $options: "i"}, Semester: sem}},
         {$sort: {Year: -1}}
     ]).toArray();
 
-    console.log(results.length)
+    // console.log(results.length)
     if(results.length !== 0){
       res.status(200).json(results)
     }else {
@@ -89,7 +89,7 @@ router.get('/filter2', async(req, res)=>{
     const sem = parseInt(req.query.sem);
     const year = parseInt(req.query.year);
     
-    console.log(dept,typeof(dept), sem, typeof(sem), year, typeof(year))
+    // console.log(dept,typeof(dept), sem, typeof(sem), year, typeof(year))
     
     // console.log(year>2010)
     let results;
@@ -105,7 +105,7 @@ router.get('/filter2', async(req, res)=>{
     
     }
 
-    console.log(results.length)
+    // console.log(results.length)
     if(results.length !== 0){
       flag = 'OK';
       res.status(200).json({result: results, status: flag})
@@ -131,13 +131,13 @@ router.get('/filter3', async(req, res)=>{
     const sem = parseInt(req.query.sem);
     const year = parseInt(req.query.year);
     
-    console.log(subj, subjC, dept, sem, typeof(sem), year, typeof(year), xm_type)
+    // console.log(subj, subjC, dept, sem, typeof(sem), year, typeof(year), xm_type)
     
     const results = await collection.aggregate([
         {$match: {Subject_Name: {$regex: subj, $options: "i"}, Subject_Code: {$regex: subjC, $options: "i"}, Dept_Name: {$regex: dept, $options: "i"}, Semester: sem, Exam_Type: {$regex: xm_type, $options: "i"}, Year: year}}
     ]).toArray();
 
-    console.log(results.length)
+    // console.log(results.length)
     if(results.length !== 0){
       flag = "OK";
       res.status(200).json({result: results, status: flag})
