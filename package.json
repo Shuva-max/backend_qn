@@ -1,10 +1,11 @@
 {
   "name": "clg_qn",
   "version": "1.0.0",
-  "main": "index.mjs",
+  "main": "app.mjs",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.mjs"
+    "start": "node app.mjs",
+    "dev": "nodemon app.mjs"
   },
   "dependencies": {
     "compression": "^1.7.4",
